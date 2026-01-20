@@ -1,0 +1,89 @@
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <!-- Brand -->
+    <div class="sidebar-brand">
+        <a href="/" class="brand-link">
+           
+            <span class="brand-text fw-light">FixLearn</span>
+        </a>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper">
+        <nav class="mt-2">
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="navigation">
+               <li class="nav-item">
+                    <a href="{{ path('dashboardIndex') }}" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                <a href="{{ path('learn_menu') }}" class="nav-link">
+                  <i class="fa-solid fa-book"></i>
+                  <p>
+                    Lernen
+                  </p>
+                </a>
+              </li>
+
+             <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="fa-solid fa-gears"></i>
+                  <p>
+                    Account
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ path('profile_index') }}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Profil</p>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="fa-solid fa-lock"></i>
+                  <p>
+                    Admin 
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ path('admin_users') }}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Benutzer</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ path('admin_vocabulary') }}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Inhalte</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./widgets/info-box.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Statistiken</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+
+
+
+
+
+
+
+
+            </ul>
+        </nav>
+    </div>
+</aside>

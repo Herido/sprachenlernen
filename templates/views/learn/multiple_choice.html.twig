@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+{% block body %}
+<div class="container">
+
+    <h1>Multiple Choice</h1>
+
+    {% if correct %}
+        <div class="card p-4 mt-4">
+            <h3>{{ correct.word }}</h3>
+
+            {% for v in vocabularies|shuffle %}
+                <button class="btn btn-outline-primary w-100 mt-2"
+                        onclick="check('{{ v.translation }}', '{{ correct.translation }}')">
+                    {{ v.translation }}
+                </button>
+            {% endfor %}
+
+            <div id="result" class="mt-3"></div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">Nicht genug Vokabeln</div>
+    {% endif %}
+</div>
+
+<script>
+function check(selected, correct) {
+    const res = document.getElementById('result');
+    if (selected === correct) {
+        res.innerHTML = '<div class="alert alert-success">Richtig!</div>';
+    } else {
+        res.innerHTML = '<div class="alert alert-danger">Falsch! Richtig: ' + correct + '</div>';
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

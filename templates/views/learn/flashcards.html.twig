@@ -1,0 +1,206 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+{% block body %}
+<body data-turbo="false">
+<div class="container py-5">
+  <h2 class="mb-4">🧠 Karteikarten</h2>
+
+  {% if vocabularies is empty %}
+    <div class="alert alert-warning">Keine Vokabeln vorhanden.</div>
+  {% else %}
+<form method="get" class="card mb-4 shadow-sm">
+    <div class="card-body row g-3 align-items-end">
+
+        <div class="col-md-3">
+            <label class="form-label">🌍 Sprache</label>
+            <select name="language" class="form-select">
+                <option value="">Alle</option>
+                <option value="EN-DE">EN → DE</option>
+                <option value="DE-EN">DE → EN</option>
+                <!--<option value="ES-DE">ES → DE</option>-->
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">📊 Level</label>
+            <select name="level" class="form-select">
+                <option value="">Alle</option>
+                <option>A1</option>
+                <option>A2</option>
+                <option>B1</option>
+                <option>B2</option>
+                <option>C1</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">📂 Kategorie</label>
+            <input
+                type="text"
+                name="category"
+                class="form-control"
+                placeholder="z. B. Reisen"
+            >
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">🔢 Anzahl</label>
+            <select name="limit" class="form-select">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 text-end">
+            <button class="btn btn-primary w-100">
+                🚀 Lernen starten
+            </button>
+        </div>
+
+    </div>
+</form>
+
+  <!-- Fortschritt -->
+  <div class="text-center mb-3">
+    <small class="text-muted">
+      Karte <span id="current-index">1</span> von <span id="total-count">0</span>
+    </small>
+
+    <div class="progress mt-2" style="height: 8px; max-width: 420px; margin: auto;">
+      <div id="progress-bar" class="progress-bar bg-primary" style="width: 0%;"></div>
+    </div>
+  </div>
+
+  <div class="flashcard-wrapper text-center">
+    <div id="flashcard" class="flashcard">
+      <div class="front" id="card-front"></div>
+      <div class="back" id="card-back"></div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center gap-3">
+      <button class="btn btn-secondary" type="button" onclick="prevCard()">⏮ Zurück</button>
+      <button class="btn btn-primary" type="button" onclick="flipCard()">🔄 Umdrehen</button>
+      <button class="btn btn-secondary" type="button" onclick="nextCard()">⏭ Weiter</button>
+    </div>
+  </div>
+
+  <div class="mt-3 d-flex justify-content-center gap-3">
+    <button class="btn btn-success" onclick="markCorrect()">✅ Gewusst</button>
+    <button class="btn btn-danger" onclick="markWrong()">❌ Nicht gewusst</button>
+</div>
+
+
+  {% endif %}
+</div>
+
+<script>
+  // ✅ nur hier JSON encoden
+  const cards = {{ vocabularies|json_encode|raw }};
+
+  let index = 0;
+  let flipped = false;
+
+  const front = document.getElementById('card-front');
+  const back  = document.getElementById('card-back');
+  const card  = document.getElementById('flashcard');
+
+  const currentIndexEl = document.getElementById('current-index');
+  const totalCountEl   = document.getElementById('total-count');
+  const progressBar    = document.getElementById('progress-bar');
+
+  function renderCard() {
+    if (!Array.isArray(cards) || cards.length === 0) return;
+
+    const current = cards[index];
+
+    flipped = false;
+    card.classList.remove('flipped');
+
+    front.innerText = current.word ?? '—';
+
+    const t = current.translations;
+    if (Array.isArray(t)) back.innerText = t.join(', ');
+    else if (typeof t === 'string') back.innerText = t;
+    else back.innerText = 'Keine Übersetzung';
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = cards.length;
+    const current = index + 1;
+
+    currentIndexEl.innerText = current;
+    totalCountEl.innerText = total;
+
+    const percent = Math.round((current / total) * 100);
+    progressBar.style.width = percent + '%';
+  }
+
+  function flipCard() {
+    flipped = !flipped;
+    card.classList.toggle('flipped', flipped);
+  }
+
+  function nextCard() {
+    if (!cards.length) return;
+    index = (index + 1) % cards.length;
+    renderCard();
+  }
+
+  function prevCard() {
+    if (!cards.length) return;
+    index = (index - 1 + cards.length) % cards.length;
+    renderCard();
+  }
+
+  renderCard();
+</script>
+
+<script>
+function sendProgress(type) {
+    fetch('{{ path("learn_progress") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token("progress") }}'
+        },
+        body: JSON.stringify({
+            vocabularyId: cards[index].id,
+            result: type
+        })
+    });
+
+    nextCard();
+}
+
+function markCorrect() {
+    sendProgress('correct');
+}
+
+function markWrong() {
+    sendProgress('wrong');
+}
+</script>
+
+
+<style>
+.flashcard-wrapper { max-width: 420px; margin: auto; }
+.flashcard { width: 100%; height: 240px; perspective: 1000px; position: relative; }
+.flashcard > div {
+  position: absolute; width: 100%; height: 100%;
+  border-radius: 16px; background: white;
+  box-shadow: 0 15px 40px rgba(0,0,0,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; backface-visibility: hidden;
+  transition: transform .6s;
+}
+.flashcard .back { transform: rotateY(180deg); background: #f8f9fa; }
+.flashcard.flipped .front { transform: rotateY(180deg); }
+.flashcard.flipped .back { transform: rotateY(360deg); }
+</style>
+
+{% endblock %}
+{% endblock %}

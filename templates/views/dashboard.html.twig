@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% block body %}
+<div class="app-wrapper">
+
+    <main class="app-main">
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="mb-0">Dashboard</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item"><a href="{{ path('dashboardIndex') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <div class="container-fluid">
+
+                <!-- STAT BOXES -->
+                <div class="row">
+
+                    <!-- Learned Words -->
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box text-bg-primary">
+                            <div class="inner">
+                                <h3>{{ stats.learnedWords }}</h3>
+                                <p>Learned Words</p>
+                            </div>
+                            <i class="small-box-icon fa-solid fa-book"></i>
+                        </div>
+                    </div>
+
+                    <!-- Streak -->
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box text-bg-success">
+                            <div class="inner">
+                                <h3>{{ stats.streak }} days</h3>
+                                <p>Learning Streak</p>
+                            </div>
+                            <i class="small-box-icon fa-solid fa-fire"></i>
+                        </div>
+                    </div>
+
+                    <!-- Languages -->
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box text-bg-warning">
+                            <div class="inner">
+                                <h3>{{ stats.languages }}</h3>
+                                <p>Languages</p>
+                            </div>
+                            <i class="small-box-icon fa-solid fa-language"></i>
+                        </div>
+                    </div>
+
+                    <!-- Accuracy -->
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box text-bg-danger">
+                            <div class="inner">
+                                <h3>{{ stats.accuracy }}%</h3>
+                                <p>Accuracy</p>
+                            </div>
+                            <i class="small-box-icon fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CONTENT ROW -->
+                <div class="row">
+
+                    <!-- LEFT -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Today's Learning Plan</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+
+                                    {% for progress in today %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                📘 {{ progress.vocabulary.word }}
+                                            </span>
+                                            <span class="badge bg-secondary">
+                                                ❌ {{ progress.wrongCount }} | ✅ {{ progress.correctCount }}
+                                            </span>
+                                        </li>
+                                    {% else %}
+                                        <li class="list-group-item text-success">
+                                            🎉 You are done for today!
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Quick Actions</h3>
+                            </div>
+                            <div class="card-body d-grid gap-2">
+
+                                <a href="{{ path('learn_flashcards') }}" class="btn btn-primary">
+                                    <i class="fa-solid fa-plus"></i> Learn New Words
+                                </a>
+
+                                <a href="{{ path('learn_flashcards') }}" class="btn btn-success">
+                                    <i class="fa-solid fa-repeat"></i> Review Weak Words
+                                </a>
+
+                                <a href="{{ path('learn_quiz') }}" class="btn btn-warning">
+                                    <i class="fa-solid fa-clipboard-question"></i> Start Quiz
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>
+{% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

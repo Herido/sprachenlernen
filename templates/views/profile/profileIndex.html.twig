@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+{% block body %}
+<div class="container-fluid py-4">
+
+<div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item"><a href="">Home</a></li>
+                            <li class="breadcrumb-item active"><a href="">Account</a></li>
+                            <li class="breadcrumb-item active">Profil</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3 mb-0">👤 Profil</h1>
+    <div>
+      <a href="{{ path('profile_password') }}" class="btn btn-outline-primary btn-sm">
+        Passwort ändern
+      </a>
+      <a href="{{ path('profile_delete') }}" class="btn btn-outline-danger btn-sm">
+        Account löschen
+      </a>
+    </div>
+  </div>
+
+  {% for label, messages in app.flashes %}
+    {% for msg in messages %}
+      <div class="alert alert-{{ label }}">{% if label == 'danger' %}{{ msg }}{% else %}{{ msg }}{% endif %}</div>
+    {% endfor %}
+  {% endfor %}
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <div class="d-flex align-items-center gap-3 mb-4">
+        {% set avatar = app.user.avatarFilename ? asset('uploads/avatars/' ~ app.user.avatarFilename) : asset('assets/img/user2-160x160.jpg') %}
+        <img src="{{ avatar }}" class="rounded-circle shadow" style="width:72px;height:72px;object-fit:cover;" alt="avatar">
+        <div>
+          <div class="fw-bold">{{ app.user.username ?? app.user.userIdentifier }}</div>
+          <div class="text-muted small">{{ app.user.email }}</div>
+        </div>
+      </div>
+
+      {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        <div class="row g-3">
+          <div class="col-md-4">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+          </div>
+
+          <div class="col-md-4">
+            {{ form_label(form.avatar) }}
+            {{ form_widget(form.avatar, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-text">PNG/JPG/WebP, max 2MB</div>
+            {{ form_errors(form.avatar) }}
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button class="btn btn-success">
+            <i class="bi bi-check2-circle"></i> Speichern
+          </button>
+        </div>
+      {{ form_end(form) }}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% endblock %}

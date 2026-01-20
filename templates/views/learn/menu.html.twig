@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+{% block body %}
+
+<div class="container-fluid py-4">
+<div class="app-content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item"><a href="">Home</a></li>
+                            <li class="breadcrumb-item active">Lernen</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- Header -->
+    <div class="mb-5">
+        <h1 class="fw-bold d-flex align-items-center gap-2">
+            🧠 Lernen
+        </h1>
+        <p class="text-muted fs-6">
+            Wähle einen Lernmodus aus und starte dein Training.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Karteikarten -->
+        <div class="col-lg-4">
+            <a href="{{ path('learn_flashcards') }}" class="learn-card card-flashcards">
+                <div class="learn-icon bg-primary">
+                    <i class="bi bi-layers"></i>
+                </div>
+                <h4>Karteikarten</h4>
+                <p>
+                    Klassisches Lernen mit Vorder- und Rückseite.
+                </p>
+                <span class="learn-btn btn btn-primary">
+                    Starten →
+                </span>
+            </a>
+        </div>
+
+        <!-- Quiz -->
+        <div class="col-lg-4">
+            <a href="{{ path('learn_quiz') }}" class="learn-card card-quiz">
+                <div class="learn-icon bg-success">
+                    <i class="bi bi-question-circle"></i>
+                </div>
+                <h4>Quiz</h4>
+                <p>
+                    Übersetzung eintippen und direkt prüfen.
+                </p>
+                <span class="learn-btn btn btn-success">
+                    Starten →
+                </span>
+            </a>
+        </div>
+
+        <!-- Multiple Choice -->
+        <div class="col-lg-4">
+            <a href="{{ path('learn_multiple_choice') }}" class="learn-card card-mc">
+                <div class="learn-icon bg-warning">
+                    <i class="bi bi-ui-radios"></i>
+                </div>
+                <h4>Multiple Choice</h4>
+                <p>
+                    Wähle die richtige Übersetzung aus.
+                </p>
+                <span class="learn-btn btn btn-warning">
+                    Starten →
+                </span>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* === Learn Menu Cards === */
+.learn-card {
+    display: block;
+    height: 100%;
+    padding: 2.5rem 2rem;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    text-align: center;
+    text-decoration: none;
+    color: #212529;
+    transition: all .35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.learn-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(0,0,0,.15);
+}
+
+.learn-card h4 {
+    margin-top: 1.2rem;
+    font-weight: 700;
+}
+
+.learn-card p {
+    color: #6c757d;
+    font-size: .95rem;
+    margin: 1rem 0 1.8rem;
+}
+
+.learn-btn {
+    pointer-events: none;
+    font-weight: 600;
+}
+
+/* Icon */
+.learn-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,.2);
+}
+
+/* Accent Hover Line */
+.learn-card::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 4px;
+    background: currentColor;
+    transform: scaleX(0);
+    transition: transform .35s ease;
+}
+
+.learn-card:hover::after {
+    transform: scaleX(1);
+}
+</style>
+
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+{% block body %}
+<div class="container-fluid">
+
+<div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item"><a href="">Home</a></li>
+                            <li class="breadcrumb-item">Admin</a></li>
+                            <li class="breadcrumb-item active">Users</li>
+                        </ol>
+                    </div>
+                </div>
+
+    <h1 class="mb-4">👥 Benutzerverwaltung</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Rollen</th>
+                    <th class="text-end">Aktionen</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.username ?? '-' }}</td>
+                        <td>
+                            {% for role in user.roles %}
+                                <span class="badge bg-secondary">{{ role }}</span>
+                            {% endfor %}
+                        </td>
+                        <td class="text-end">
+
+                            <a
+                                href="{{ path('admin_users_toggle_role', {id: user.id}) }}"
+                                class="btn btn-sm btn-warning"
+                            >
+                                {% if 'ROLE_ADMIN' in user.roles %}
+                                    ⬇️ Admin entfernen
+                                {% else %}
+                                    ⬆️ Zum Admin machen
+                                {% endif %}
+                            </a>
+
+                            <a
+                                href="{{ path('admin_users_delete', {id: user.id}) }}"
+                                class="btn btn-sm btn-danger"
+                                onclick="return confirm('User wirklich löschen?')"
+                            >
+                                🗑 Löschen
+                            </a>
+
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            Keine Benutzer vorhanden
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% endblock %}

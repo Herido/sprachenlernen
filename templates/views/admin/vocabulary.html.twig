@@ -1,0 +1,226 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+{% block body %}
+<div class="container-fluid py-4">
+
+<div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item"><a href="">Home</a></li>
+                            <li class="breadcrumb-item">Admin</a></li>
+                            <li class="breadcrumb-item active">Vokabeln</li>
+                        </ol>
+                    </div>
+                </div>
+
+  <!-- PAGE TITLE -->
+  <h1 class="mb-4 fw-bold">Vokabel Import</h1>
+
+  <!-- MODE SELECTION -->
+  <div class="row g-4 mb-4">
+
+    <!-- MANUAL CARD -->
+    <div class="col-md-6">
+      <div class="card import-card text-center" onclick="toggleSection('manual-section')">
+        <div class="card-body py-5">
+          <div class="icon-circle bg-primary mb-3">
+            <i class="bi bi-pencil-square"></i>
+          </div>
+          <h4>Manuell</h4>
+          <p class="text-muted">Einzelne Vokabeln gezielt hinzufügen</p>
+          <button class="btn btn-primary">
+            <i class="bi bi-arrow-right-circle"></i> Auswählen
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSV CARD -->
+    <div class="col-md-6">
+      <div class="card import-card text-center" onclick="toggleSection('csv-section')">
+        <div class="card-body py-5">
+          <div class="icon-circle bg-success mb-3">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+          </div>
+          <h4>CSV Import</h4>
+          <p class="text-muted">Viele Vokabeln auf einmal importieren</p>
+          <button class="btn btn-success">
+            <i class="bi bi-upload"></i> Auswählen
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MANUAL SECTION -->
+  <div id="manual-section" class="card mb-4 d-none fade-section">
+    <div class="card-header d-flex justify-content-between">
+      <strong>Manuelle Eingabe</strong>
+      <button class="btn btn-sm btn-outline-secondary" onclick="closeSection('manual-section')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{{ path('admin_vocabulary_manual') }}">
+        <div class="row g-3">
+          <div class="col-md-2">
+            <input class="form-control" name="word" placeholder="Wort" required>
+          </div>
+          <div class="col-md-3">
+            <input class="form-control" name="translations" placeholder="Übersetzungen (; getrennt)">
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" name="language">
+              <option>EN-DE</option>
+              <option>DE-EN</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <select class="form-select" name="level">
+              <option>A1</option><option>A2</option><option>B1</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <input class="form-control" name="category" placeholder="Kategorie">
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-success w-100">
+              <i class="bi bi-plus-circle"></i> Hinzufügen
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CSV SECTION -->
+  <div id="csv-section" class="card mb-4 d-none fade-section">
+    <div class="card-header d-flex justify-content-between">
+      <strong>CSV Import</strong>
+      <button class="btn btn-sm btn-outline-secondary" onclick="closeSection('csv-section')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-6">
+            <input type="file" name="csv" class="form-control" required>
+            <small class="text-muted">
+              Format: word,translations,language,level,category,example
+            </small>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" name="mode">
+              <option value="skip">Duplikate überspringen</option>
+              <option value="update">Duplikate aktualisieren</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-success w-100">
+              <i class="bi bi-upload"></i> Importieren
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- VOCAB TABLE -->
+  <div class="card">
+    <div class="card-header">
+      <strong>Alle Vokabeln</strong>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Wort</th>
+          <th>Übersetzungen</th>
+          <th>Sprache</th>
+          <th>Level</th>
+          <th class="text-end">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for vocab in vocabularies %}
+          <tr>
+            <td><span class="badge bg-secondary">#{{ vocab.id }}</span></td>
+            <td class="fw-semibold">{{ vocab.word }}</td>
+            <td>{{ vocab.translations|join(', ') }}</td>
+            <td><span class="badge bg-info">{{ vocab.language }}</span></td>
+            <td><span class="badge bg-warning text-dark">{{ vocab.level }}</span></td>
+            <td class="text-end">
+              <a href="#" class="btn btn-sm btn-outline-warning">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('Wirklich löschen?')">
+                <i class="bi bi-trash"></i>
+              </a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              Keine Vokabeln vorhanden
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- STYLES -->
+<style>
+.import-card {
+  cursor: pointer;
+  transition: all .3s ease;
+  border-radius: 14px;
+}
+.import-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,.12);
+}
+.icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32px;
+  margin: auto;
+}
+.fade-section {
+  animation: fadeIn .4s ease;
+}
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+</style>
+
+<!-- SCRIPTS -->
+<script>
+function toggleSection(id) {
+  document.querySelectorAll('.fade-section').forEach(el => el.classList.add('d-none'));
+  document.getElementById(id).classList.remove('d-none');
+}
+
+function closeSection(id) {
+  document.getElementById(id).classList.add('d-none');
+}
+</script>
+{% endblock %}
+
+{% endblock %}

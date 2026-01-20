@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+{% block body %}
+<div class="container-fluid py-4">
+
+  <h1 class="h3 mb-3 text-danger">🗑 Account löschen</h1>
+
+  <div class="alert alert-warning">
+    <b>Achtung:</b> Diese Aktion ist dauerhaft. Dein Account und deine gespeicherten Daten werden gelöscht.
+  </div>
+
+  {% for label, messages in app.flashes %}
+    {% for msg in messages %}
+      <div class="alert alert-{{ label }}">{{ msg }}</div>
+    {% endfor %}
+  {% endfor %}
+
+  <div class="card border-danger shadow-sm">
+    <div class="card-body">
+      {{ form_start(form) }}
+
+        <div class="mb-3">
+          {{ form_label(form.password) }}
+          {{ form_widget(form.password, {'attr': {'class':'form-control'}}) }}
+          {{ form_errors(form.password) }}
+        </div>
+
+        <div class="form-check mb-3">
+          {{ form_widget(form.gdpr, {'attr': {'class': 'form-check-input'}}) }}
+          {{ form_label(form.gdpr, null, {'label_attr': {'class':'form-check-label'}}) }}
+          {{ form_errors(form.gdpr) }}
+        </div>
+
+        <button class="btn btn-danger">
+          Account endgültig löschen
+        </button>
+        <a href="{{ path('profile_index') }}" class="btn btn-light">Abbrechen</a>
+
+      {{ form_end(form) }}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% endblock %}

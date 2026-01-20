@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+{% block body %}
+
+<div class="container py-5 text-center">
+
+  <h2 class="mb-2">❓ Quiz</h2>
+  <p class="text-muted mb-4">Übersetzung eintippen und direkt prüfen</p>
+<form method="get" class="row mb-4">
+  <div class="col">
+    <select name="level" class="form-select">
+      <option value="">Level</option>
+      <option>A1</option><option>A2</option>
+    </select>
+  </div>
+  <div class="col">
+    <select name="category" class="form-select">
+      <option value="">Kategorie</option>
+      <option>Alltag</option>
+    </select>
+  </div>
+  <div class="col">
+    <button class="btn btn-primary w-100">Filtern</button>
+  </div>
+</form>
+
+  <div class="quiz-card mx-auto">
+
+
+    <div class="word mb-4" id="quiz-word">Haus</div>
+
+    <input
+      type="text"
+      id="answer-input"
+      class="form-control text-center"
+      placeholder="Übersetzung eingeben..."
+      autocomplete="off"
+    >
+
+    <div id="feedback" class="mt-3"></div>
+
+    <div class="mt-4 d-flex justify-content-center gap-3">
+      <button class="btn btn-primary" onclick="checkAnswer()">✔ Prüfen</button>
+      <button class="btn btn-secondary" onclick="nextQuestion()">⏭ Weiter</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const cards = {{ vocabularies|raw }};
+let index = 0;
+
+const wordEl = document.getElementById('quiz-word');
+const inputEl = document.getElementById('answer-input');
+const feedbackEl = document.getElementById('feedback');
+
+function renderQuestion() {
+  wordEl.innerText = cards[index].word;
+  inputEl.value = '';
+  inputEl.focus();
+  feedbackEl.innerHTML = '';
+}
+
+function normalize(text) {
+  return text.trim().toLowerCase();
+}
+
+function checkAnswer() {
+  const userAnswer = normalize(inputEl.value);
+  const solutions = cards[index].translations.map(t => normalize(t));
+
+  if (solutions.includes(userAnswer)) {
+    feedbackEl.innerHTML = `<div class="text-success fw-bold">✅ Richtig!</div>`;
+  } else {
+    feedbackEl.innerHTML = `
+      <div class="text-danger fw-bold">❌ Falsch</div>
+      <div class="text-muted">Richtig: ${cards[index].translations.join(', ')}</div>
+    `;
+  }
+}
+
+function nextQuestion() {
+  index = (index + 1) % cards.length;
+  renderQuestion();
+}
+
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkAnswer();
+});
+
+renderQuestion();
+</script>
+
+<style>
+.quiz-card {
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 20px 50px rgba(0,0,0,.15);
+}
+
+.word {
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+</style>
+
+{% endblock %}
+{% endblock %}
