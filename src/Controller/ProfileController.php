@@ -34,7 +34,6 @@ class ProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Avatar Upload (optional)
             $avatarFile = $form->get('avatar')->getData();
             if ($avatarFile) {
                 $avatarDir = $params->get('app.avatar_dir');
@@ -43,7 +42,6 @@ class ProfileController extends AbstractController
                 $ext = $avatarFile->guessExtension() ?: 'jpg';
                 $newFilename = $safeName.'.'.$ext;
 
-                // altes Avatar löschen
                 if ($user->getAvatarFilename()) {
                     $old = $avatarDir.'/'.$user->getAvatarFilename();
                     if (is_file($old)) @unlink($old);
@@ -120,18 +118,15 @@ class ProfileController extends AbstractController
                 return $this->redirectToRoute('profile_delete');
             }
 
-            // Avatar-Datei löschen
             $avatarDir = $params->get('app.avatar_dir');
             if ($user->getAvatarFilename()) {
                 $path = $avatarDir.'/'.$user->getAvatarFilename();
                 if (is_file($path)) @unlink($path);
             }
 
-            // User löschen
             $em->remove($user);
             $em->flush();
 
-            // sauber ausloggen (Session kill)
             $this->addFlash('success', 'Dein Account wurde gelöscht.');
         return $this->redirectToRoute('app_logout');
         }

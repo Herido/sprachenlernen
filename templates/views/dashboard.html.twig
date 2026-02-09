@@ -29,6 +29,21 @@
                 <div class="row">
 
                     <!-- Learned Words -->
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box text-bg-success">
+                            <div class="inner">
+                                <h3>6</h3>
+                                <p>Learning Streak</p>
+                            </div>
+                            <i class="small-box-icon fa-solid fa-fire"></i>
+                        </div>
+                    </div>
+
+
+
+
+
                     <div class="col-lg-3 col-6">
                         <div class="small-box text-bg-primary">
                             <div class="inner">
@@ -40,16 +55,6 @@
                     </div>
 
                     <!-- Streak -->
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box text-bg-success">
-                            <div class="inner">
-                                <h3>{{ stats.streak }} days</h3>
-                                <p>Learning Streak</p>
-                            </div>
-                            <i class="small-box-icon fa-solid fa-fire"></i>
-                        </div>
-                    </div>
-
                     <!-- Languages -->
                     <div class="col-lg-3 col-6">
                         <div class="small-box text-bg-warning">
@@ -92,7 +97,6 @@
                                                 📘 {{ progress.vocabulary.word }}
                                             </span>
                                             <span class="badge bg-secondary">
-                                                ❌ {{ progress.wrongCount }} | ✅ {{ progress.correctCount }}
                                             </span>
                                         </li>
                                     {% else %}

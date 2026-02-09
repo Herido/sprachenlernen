@@ -28,15 +28,12 @@ public function flashcards(
 ): Response {
     $user = $this->getUser();
 
-    // 🔎 Filter aus URL lesen (?language=EN-DE&level=A1&category=Alltag)
     $language = $request->query->get('language');
     $level    = $request->query->get('level');
     $category = $request->query->get('category');
 
-    // 🔁 Umkehr-Modus (?reverse=1)
     $reverse = $request->query->getBoolean('reverse');
 
-    // 🧠 Lernlogik aus Repository
     if ($language || $level || $category) {
         $vocabularies = $repo->findForLearning(
             language: $language,
@@ -45,18 +42,15 @@ public function flashcards(
             limit: 20
         );
     } else {
-        // Standard: personalisierte Reihenfolge
         $vocabularies = $repo->getFlashcardsForUser($user);
     }
 
-    // 🔀 Zufällige Reihenfolge (PHP, nicht SQL)
     shuffle($vocabularies);
 
     return $this->render('views/learn/flashcards.html.twig', [
         'vocabularies' => array_map(fn($v) => [
             'id' => $v->getId(),
 
-            // 🔁 Umkehr-Modus
             'word' => $reverse
                 ? implode(', ', (array) $v->getTranslations())
                 : $v->getWord(),
@@ -66,7 +60,6 @@ public function flashcards(
                 : (array) $v->getTranslations(),
         ], $vocabularies),
 
-        // 🎯 Filter zurück ins Template
         'activeFilters' => [
             'language' => $language,
             'level' => $level,

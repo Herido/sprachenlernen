@@ -37,7 +37,6 @@ class RegistrationFormType extends AbstractType
             ],
         ])
 
-        // AGB akzeptieren ✔
         ->add('agreeTerms', CheckboxType::class, [
             'mapped' => false,
             'constraints' => [

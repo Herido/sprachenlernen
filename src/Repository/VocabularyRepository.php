@@ -16,12 +16,6 @@ class VocabularyRepository extends ServiceEntityRepository
     }
 
 
-    /**
-     * Gibt Flashcards für einen User zurück
-     * Priorität:
-     * 1. Oft falsch beantwortet
-     * 2. Lange nicht gesehen
-     */
     public function getFlashcardsForUser(User $user): array
     {
 
@@ -64,7 +58,7 @@ class VocabularyRepository extends ServiceEntityRepository
 
     $result = $qb->getQuery()->getResult();
 
-    shuffle($result); // 🔥 Zufall hier
+    shuffle($result);
     return array_slice($result, 0, $limit);
 }
 

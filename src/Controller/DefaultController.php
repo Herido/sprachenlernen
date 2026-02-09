@@ -31,26 +31,19 @@ public function dashboard(
 ): Response {
     $user = $this->getUser();
 
-    // Learned words (>= 5 correct)
     $learnedWords = $progressRepo->countLearnedWords($user);
 
-    // Accuracy
     $accuracy = $progressRepo->getAccuracy($user);
 
-    // Streak
-    $streak = $progressRepo->getStreak($user);
-
-    // Languages
     $languages = $vocabRepo->countDistinctLanguages($user);
 
-    // Today's learning plan
     $today = $progressRepo->findForToday($user, 10);
 
     return $this->render('views/dashboard.html.twig', [
         'stats' => [
             'learnedWords' => $learnedWords,
             'accuracy' => $accuracy,
-            'streak' => $streak,
+            //'streak' => $streak,
             'languages' => $languages,
         ],
         'today' => $today,
